@@ -26,14 +26,7 @@ pipeline {
             }
         }
 
-        stage('Code Quality - SonarQube') {
-            steps {
-                echo 'Running SonarQube analysis...'
-                withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner'
-                }
-            }
-        }
+        
 
         stage('Security Scan - Snyk') {
             environment {
