@@ -8,11 +8,12 @@ pipeline {
     }
 
     stages {
+
         stage('Build') {
             steps {
                 echo 'Installing dependencies...'
                 sh 'npm install'
-                
+
                 echo 'Building Docker image...'
                 sh 'docker build -t $DOCKER_IMAGE .'
             }
@@ -25,44 +26,45 @@ pipeline {
             }
         }
 
-        stage('Code Quality') {
+        stage('Code Quality - SonarQube') {
             steps {
-                echo 'Running SonarQube code quality analysis...'
+                echo 'Running SonarQube analysis...'
                 withSonarQubeEnv('SonarQube') {
                     sh 'sonar-scanner'
                 }
             }
         }
 
-stage('Security Scan - Snyk') {
-    environment {
-        SNYK_TOKEN = credentials('snyk-api-token')
-    }
+        stage('Security Scan - Snyk') {
+            environment {
+                SNYK_TOKEN = credentials('snyk-api-token')
+            }
 
-    steps {
-        echo 'Installing Snyk CLI...'
-        sh 'npm install -g snyk'
+            steps {
+                echo 'Installing Snyk CLI...'
+                sh 'npm install -g snyk'
 
-        echo 'Authenticating with Snyk...'
-        sh 'snyk auth $668ef189-04f8-45ec-ac5a-66a02cf66158'
+                echo 'Authenticating with Snyk...'
+                sh 'snyk auth $SNYK_TOKEN'
 
-        echo 'Running dependency vulnerability scan...'
-        sh 'snyk test --severity-threshold=high'
+                echo 'Running vulnerability scan...'
+                sh 'snyk test --severity-threshold=high'
 
-        echo 'Sending project to Snyk monitoring dashboard...'
-        sh 'snyk monitor || true'
-    }
-}
+                echo 'Sending results to Snyk dashboard...'
+                sh 'snyk monitor || true'
+            }
         }
 
         stage('Deploy to Staging') {
             steps {
-                echo "Deploying Docker container to staging on port $STAGING_PORT..."
-                sh """
+                echo "Deploying to staging on port $STAGING_PORT..."
+
+                sh '''
                     docker stop api-staging || true
                     docker rm api-staging || true
                     docker run -d -p $STAGING_PORT:5000 --name api-staging $DOCKER_IMAGE
-                """
+                '''
+
                 sh 'sleep 10'
                 sh "curl -f http://localhost:$STAGING_PORT/health || exit 1"
             }
@@ -70,12 +72,14 @@ stage('Security Scan - Snyk') {
 
         stage('Release to Production') {
             steps {
-                echo "Promoting container to production on port $PROD_PORT..."
-                sh """
+                echo "Deploying to production on port $PROD_PORT..."
+
+                sh '''
                     docker stop api-prod || true
                     docker rm api-prod || true
                     docker run -d -p $PROD_PORT:5000 --name api-prod $DOCKER_IMAGE
-                """
+                '''
+
                 sh 'sleep 10'
                 sh "curl -f http://localhost:$PROD_PORT/health || exit 1"
             }
@@ -85,18 +89,21 @@ stage('Security Scan - Snyk') {
             steps {
                 echo 'Checking production health...'
                 sh "curl -f http://localhost:$PROD_PORT/health || exit 1"
+
+                echo 'Monitoring integration simulated'
             }
         }
     }
 
     post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+
         failure {
             mail to: 'nandakishore9t@example.com',
                  subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
                  body: "Check Jenkins logs: ${env.BUILD_URL}"
-        }
-        success {
-            echo 'Pipeline completed successfully!'
         }
     }
 }
