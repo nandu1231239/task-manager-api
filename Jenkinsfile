@@ -44,7 +44,7 @@ stage('Security Scan - Snyk') {
         sh 'npm install -g snyk'
 
         echo 'Authenticating with Snyk...'
-        sh 'snyk auth $SNYK_TOKEN'
+        sh 'snyk auth $668ef189-04f8-45ec-ac5a-66a02cf66158'
 
         echo 'Running dependency vulnerability scan...'
         sh 'snyk test --severity-threshold=high'
