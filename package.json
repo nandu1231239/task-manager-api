@@ -2,11 +2,13 @@
   "name": "task-manager",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "test": "jest"
-  },
+"scripts": {
+  "start": "node src/server.js",
+  "dev": "nodemon src/server.js",
+  "test": "jest",
+  "sonar": "sonar-scanner"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",

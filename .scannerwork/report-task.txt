@@ -1,0 +1,7 @@
+organization=nandu1231239
+projectKey=nandu1231239_task-manager-api
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.87945
+dashboardUrl=https://sonarcloud.io/dashboard?id=nandu1231239_task-manager-api
+ceTaskId=AZ5JJIOBIHk8P4XKGUbP
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZ5JJIOBIHk8P4XKGUbP
