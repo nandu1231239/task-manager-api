@@ -49,27 +49,20 @@ pipeline {
     }
 }
 
-        
+        stage('Snyk Security Scan') {
+            steps {
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh '''
+                        echo "Running Snyk test..."
+                        snyk test --all-projects --severity-threshold=high --token=$SNYK_TOKEN
 
-stage('Snyk Security Scan') {
-
-    steps {
-        sh 'npm install -g snyk'
-        withCredentials([
-            string(
-                credentialsId: 'sonar-token',
-                variable: 'SNYK_TOKEN'
-            )
-        ]) {
-
-            sh 'snyk auth $SNYK_TOKEN'
-
-            sh 'npm run snyk-test'
-
-            sh 'npm run snyk-monitor'
+                        echo "Running Snyk monitor..."
+                        snyk monitor --all-projects --token=$SNYK_TOKEN
+                    '''
+                }
+            }
         }
-    }
-}
+
 
         stage('Deploy to Staging') {
             steps {
