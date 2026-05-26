@@ -57,7 +57,7 @@ stage('Snyk Security Scan') {
 
         withCredentials([
             string(
-                credentialsId: '668ef189-04f8-45ec-ac5a-66a02cf66158',
+                credentialsId: 'sonar-token',
                 variable: 'SNYK_TOKEN'
             )
         ]) {
