@@ -27,20 +27,28 @@ pipeline {
             }
         }
         stage('Code Quality - SonarQube') {
-            steps {
-               echo 'Running SonarCloud analysis...'
-                // Matches the Name from your "System" configuration screen
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        sonar-scanner \
-                        -Dsonar.organization=nandu1231239 \
-                        -Dsonar.projectKey=nandu1231239_task-manager-api \
-                        -Dsonar.sources=.src \
-                        -Dsonar.host.url=https://sonarcloud.io
-                    '''
-                }
+    steps {
+        echo 'Running SonarCloud analysis...'
+        script {
+            // 1. Fetch the absolute installation path from Jenkins Tool Configuration
+            // 'SonarQube' matches the exact name from your Tools screen
+            def scannerHomePath = tool 'SonarQube'
+            
+            // 2. Wrap your execution with the environment injector
+            withSonarQubeEnv('SonarQube') {
+                // 3. Execute using the explicit path to the binary folder
+                sh """
+                    ${scannerHomePath}/bin/sonar-scanner \
+                    -Dsonar.organization=nandu1231239 \
+                    -Dsonar.projectKey=nandu1231239_task-manager-api \
+                    -Dsonar.sources=src \
+                    -Dsonar.host.url=https://sonarcloud.io
+                """
             }
         }
+    }
+}
+
         
 
         stage('Security Scan - Snyk') {
