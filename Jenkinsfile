@@ -54,7 +54,7 @@ pipeline {
 stage('Snyk Security Scan') {
 
     steps {
-
+        sh 'npm install -g snyk'
         withCredentials([
             string(
                 credentialsId: 'sonar-token',
