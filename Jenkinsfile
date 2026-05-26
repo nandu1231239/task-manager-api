@@ -29,7 +29,6 @@ pipeline {
                 sh 'npm test'
             }
         }
-
         stage('Code Quality - SonarQube') {
             steps {
                echo 'Running SonarCloud analysis...'
@@ -45,6 +44,7 @@ pipeline {
                 }
             }
         }
+        
 
         stage('Security Scan - Snyk') {
             environment {
