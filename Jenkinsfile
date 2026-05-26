@@ -1,9 +1,6 @@
 pipeline {
     agent any
-     tools {
-        // This must match the exact Name from your Tools page
-        sonarScanner 'SonarQube' 
-    }
+
 
     environment {
         DOCKER_IMAGE = "myapi:latest"
