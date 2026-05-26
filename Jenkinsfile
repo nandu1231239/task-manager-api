@@ -1,5 +1,9 @@
 pipeline {
     agent any
+     tools {
+        // This must match the exact Name from your Tools page
+        sonarScanner 'SonarQube' 
+    }
 
     environment {
         DOCKER_IMAGE = "myapi:latest"
@@ -28,9 +32,16 @@ pipeline {
 
         stage('Code Quality - SonarQube') {
             steps {
-                echo 'Running SonarQube analysis...'
+               echo 'Running SonarCloud analysis...'
+                // Matches the Name from your "System" configuration screen
                 withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner'
+                    sh '''
+                        sonar-scanner \
+                        -Dsonar.organization=nandu1231239 \
+                        -Dsonar.projectKey=nandu1231239_task-manager-api \
+                        -Dsonar.sources=.src \
+                        -Dsonar.host.url=https://sonarcloud.io
+                    '''
                 }
             }
         }
