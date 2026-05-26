@@ -6,7 +6,9 @@
   "start": "node src/server.js",
   "dev": "nodemon src/server.js",
   "test": "jest",
-  "sonar": "sonar-scanner"
+  "sonar": "sonar-scanner",
+  "snyk-test": "snyk test",
+  "snyk-monitor": "snyk monitor"
 },
 
   "keywords": [],

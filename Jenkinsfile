@@ -46,25 +46,25 @@ pipeline {
         }
         
 
-        stage('Security Scan - Snyk') {
-            environment {
-                SNYK_TOKEN = credentials('snyk-api-token')
-            }
+stage('Snyk Security Scan') {
 
-            steps {
-                echo 'Installing Snyk CLI...'
-                sh 'npm install -g snyk'
+    steps {
 
-                echo 'Authenticating with Snyk...'
-                sh 'snyk auth $SNYK_TOKEN'
+        withCredentials([
+            string(
+                credentialsId: '668ef189-04f8-45ec-ac5a-66a02cf66158',
+                variable: 'SNYK_TOKEN'
+            )
+        ]) {
 
-                echo 'Running vulnerability scan...'
-                sh 'snyk test --severity-threshold=high'
+            sh 'snyk auth $SNYK_TOKEN'
 
-                echo 'Sending results to Snyk dashboard...'
-                sh 'snyk monitor || true'
-            }
+            sh 'npm run snyk-test'
+
+            sh 'npm run snyk-monitor'
         }
+    }
+}
 
         stage('Deploy to Staging') {
             steps {
