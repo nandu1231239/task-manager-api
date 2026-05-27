@@ -23,6 +23,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const app = require('./app');
+global.crypto = require('crypto');
 
 const PORT = process.env.PORT || 5000;
 
