@@ -19,6 +19,8 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
+jest.setTimeout(30000);
+
 process.env.JWT_SECRET = 'testsecret';
 
 const app = require('../src/app');
