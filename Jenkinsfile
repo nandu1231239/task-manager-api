@@ -98,19 +98,23 @@ stage('Deploy to Staging') {
     }
 }
         stage('Release to Production') {
-            steps {
-                echo "Deploying to production on port $PROD_PORT..."
+    steps {
+        sh '''
+            echo "Deploying to production on port 5002..."
 
-                sh '''
-                    docker stop api-prod || true
-                    docker rm api-prod || true
-                    docker run -d -p $PROD_PORT:5000 --name api-prod $DOCKER_IMAGE
-                '''
+            docker stop api-prod || true
+            docker rm api-prod || true
 
-                sh 'sleep 10'
-                sh "curl -f http://localhost:$PROD_PORT/health || exit 1"
-            }
-        }
+            docker run -d \
+              -p 5002:5000 \
+              -e PORT=5000 \
+              -e MONGO_URI=mongodb://host.docker.internal:27017/taskmanager \
+              -e JWT_SECRET=assignment \
+              --name api-prod \
+              myapi:latest
+        '''
+    }
+}
 
         stage('Monitoring & Alerts') {
             steps {

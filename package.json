@@ -2,15 +2,14 @@
   "name": "task-manager",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "start": "node src/server.js",
-  "dev": "nodemon src/server.js",
-  "test": "jest",
-  "sonar": "sonar-scanner",
-  "snyk-test": "snyk test",
-  "snyk-monitor": "snyk monitor"
-},
-
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "sonar": "sonar-scanner",
+    "snyk-test": "snyk test",
+    "snyk-monitor": "snyk monitor"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -26,6 +25,7 @@
   },
   "devDependencies": {
     "jest": "^30.4.2",
+    "mongodb-memory-server": "^11.1.0",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"
   }
