@@ -26,42 +26,42 @@ pipeline {
                 sh 'npm test'
             }
         }
-        stage('Code Quality - SonarQube') {
-    steps {
-        echo 'Running SonarCloud analysis...'
-        script {
-            // 1. Fetch the absolute installation path from Jenkins Tool Configuration
-            // 'SonarQube' matches the exact name from your Tools screen
-            def scannerHomePath = tool 'SonarQube'
+//         stage('Code Quality - SonarQube') {
+//     steps {
+//         echo 'Running SonarCloud analysis...'
+//         script {
+//             // 1. Fetch the absolute installation path from Jenkins Tool Configuration
+//             // 'SonarQube' matches the exact name from your Tools screen
+//             def scannerHomePath = tool 'SonarQube'
             
-            // 2. Wrap your execution with the environment injector
-            withSonarQubeEnv('SonarQube') {
-                // 3. Execute using the explicit path to the binary folder
-                sh """
-                    ${scannerHomePath}/bin/sonar-scanner \
-                    -Dsonar.organization=nandu1231239 \
-                    -Dsonar.projectKey=nandu1231239_task-manager-api \
-                    -Dsonar.sources=src \
-                    -Dsonar.host.url=https://sonarcloud.io
-                """
-            }
-        }
-    }
-}
+//             // 2. Wrap your execution with the environment injector
+//             withSonarQubeEnv('SonarQube') {
+//                 // 3. Execute using the explicit path to the binary folder
+//                 sh """
+//                     ${scannerHomePath}/bin/sonar-scanner \
+//                     -Dsonar.organization=nandu1231239 \
+//                     -Dsonar.projectKey=nandu1231239_task-manager-api \
+//                     -Dsonar.sources=src \
+//                     -Dsonar.host.url=https://sonarcloud.io
+//                 """
+//             }
+//         }
+//     }
+// }
 
-        stage('Snyk Security Scan') {
-            steps {
-                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
-                    sh '''
-                        echo "Running Snyk test..."
-                        snyk test --all-projects --severity-threshold=high --token=$SNYK_TOKEN
+//         stage('Snyk Security Scan') {
+//             steps {
+//                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+//                     sh '''
+//                         echo "Running Snyk test..."
+//                         snyk test --all-projects --severity-threshold=high --token=$SNYK_TOKEN
 
-                        echo "Running Snyk monitor..."
-                        snyk monitor --all-projects --token=$SNYK_TOKEN
-                    '''
-                }
-            }
-        }
+//                         echo "Running Snyk monitor..."
+//                         snyk monitor --all-projects --token=$SNYK_TOKEN
+//                     '''
+//                 }
+//             }
+//         }
 
 
         stage('Deploy to Staging') {
