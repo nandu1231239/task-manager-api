@@ -64,22 +64,39 @@ pipeline {
 //         }
 
 
-        stage('Deploy to Staging') {
+//         stage('Deploy to Staging') {
+//     steps {
+//         sh '''
+//             echo "Deploying to staging on port 5001..."
+
+//             docker stop api-staging || true
+//             docker rm api-staging || true
+
+//             docker run -d \
+//               -p 5001:5000 \
+//               --name api-staging \
+//               myapi:latest
+//         '''
+//     }
+// }
+stage('Deploy to Staging') {
     steps {
         sh '''
-            echo "Deploying to staging on port 5001..."
+            echo "Deploying application..."
 
             docker stop api-staging || true
             docker rm api-staging || true
 
             docker run -d \
               -p 5001:5000 \
+              -e PORT=5000 \
+              -e MONGO_URI=mongodb://host.docker.internal:27017/taskmanager \
+              -e JWT_SECRET=assignment \
               --name api-staging \
               myapi:latest
         '''
     }
 }
-
         stage('Release to Production') {
             steps {
                 echo "Deploying to production on port $PROD_PORT..."
