@@ -20,9 +20,8 @@ USER appuser
 # Expose API port
 EXPOSE 5000
 
-# Set health check (used in monitoring)
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-  CMD curl -f http://localhost:5000/health || exit 1
-
+  CMD curl -f http://localhost:5000 || exit 1
+  
 # Start the application
 CMD ["npm", "start"]
