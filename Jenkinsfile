@@ -122,7 +122,7 @@ stage('Deploy to Staging') {
         echo 'Starting Monitoring Stack...'
 
         // Start Prometheus + Grafana containers
-        sh 'docker-compose up -d prometheus grafana'
+        sh 'docker compose up -d prometheus grafana'
 
         // Wait for services to initialize
         sh 'sleep 15'
