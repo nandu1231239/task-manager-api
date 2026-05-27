@@ -116,28 +116,22 @@ stage('Deploy to Staging') {
     }
 }
 
-     stage('Monitoring') {
+  stage('Monitoring') {
     steps {
 
-        echo 'Starting Monitoring Stack...'
+        echo 'Checking Application Metrics'
 
-        // Start Prometheus + Grafana containers
-        sh 'docker compose up -d prometheus grafana'
+        sh 'curl --fail http://host.docker.internal:5000/metrics'
 
-        // Wait for services to initialize
-        sh 'sleep 15'
+        echo 'Checking Prometheus Health'
 
-        echo 'Checking Metrics Endpoint...'
+        sh 'curl --fail http://host.docker.internal:9090/-/healthy'
 
-        // Verify Node.js metrics endpoint
-        sh 'curl http://localhost:5000/metrics'
+        echo 'Checking Grafana Health'
 
-        echo 'Checking Prometheus Targets...'
+        sh 'curl --fail http://host.docker.internal:3000/api/health'
 
-        // Verify Prometheus is scraping metrics
-        sh 'curl http://localhost:9090/api/v1/targets'
-
-        echo 'Monitoring Stack Running Successfully'
+        echo 'Monitoring Verification Successful'
     }
 }
     }
