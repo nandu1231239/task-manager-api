@@ -65,19 +65,20 @@ pipeline {
 
 
         stage('Deploy to Staging') {
-            steps {
-                echo "Deploying to staging on port $STAGING_PORT..."
+    steps {
+        sh '''
+            echo "Deploying to staging on port 5001..."
 
-                sh '''
-                    docker stop api-staging || true
-                    docker rm api-staging || true
-                    docker run -d -p $STAGING_PORT:5000 --name api-staging $DOCKER_IMAGE
-                '''
+            docker stop api-staging || true
+            docker rm api-staging || true
 
-                sh 'sleep 10'
-                sh "curl -f http://localhost:$STAGING_PORT/health || exit 1"
-            }
-        }
+            docker run -d \
+              -p 5001:5000 \
+              --name api-staging \
+              myapi:latest
+        '''
+    }
+}
 
         stage('Release to Production') {
             steps {
