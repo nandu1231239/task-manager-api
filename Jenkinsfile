@@ -64,21 +64,7 @@ pipeline {
         }
 
 
-        stage('Deploy to Staging') {
-    steps {
-        sh '''
-            echo "Deploying to staging on port 5001..."
 
-            docker stop api-staging || true
-            docker rm api-staging || true
-
-            docker run -d \
-              -p 5001:5000 \
-              --name api-staging \
-              myapi:latest
-        '''
-    }
-}
 stage('Deploy to Staging') {
     steps {
         sh '''
