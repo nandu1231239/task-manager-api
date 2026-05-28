@@ -123,7 +123,12 @@ stage('Deploy to Staging') {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            mail to: 'nandakishore9t@example.com',
+             subject: "Build & Test Successful: ${currentBuild.fullDisplayName}",
+             body: """
+                Build and Test Stages Completed Successfully!
+                The application is ready for deployment and further testing in staging.
+             """
         }
 
         failure {
