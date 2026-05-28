@@ -123,7 +123,7 @@ stage('Deploy to Staging') {
 
     post {
         success {
-            mail to: 'nandakishore9t@example.com',
+            mail to: 'nandakishore9t@gmail.com',
              subject: "Build & Test Successful: ${currentBuild.fullDisplayName}",
              body: """
                 Build and Test Stages Completed Successfully!
@@ -132,7 +132,7 @@ stage('Deploy to Staging') {
         }
 
         failure {
-            mail to: 'nandakishore9t@example.com',
+            mail to: 'nandakishore9t@gmail.com',
                  subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
                  body: "Check Jenkins logs: ${env.BUILD_URL}"
         }
